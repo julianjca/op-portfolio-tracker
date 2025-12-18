@@ -51,6 +51,32 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'optcgapi.com',
+        pathname: '/media/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'en.onepiece-cardgame.com',
+        pathname: '/images/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.tcgplayer.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'tcgplayer-cdn.tcgplayer.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'product-images.tcgplayer.com',
+      },
+    ],
+  },
   async headers() {
     return [
       {

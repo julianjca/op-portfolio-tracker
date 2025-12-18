@@ -31,7 +31,7 @@
       "@/public/*": ["./public/*"]
     }
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "supabase/functions"],
   "include": [
     ".eslintrc.mjs",
     "next-env.d.ts",

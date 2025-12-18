@@ -1,163 +1,191 @@
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/26466516/141659551-d7ba5630-7200-46fe-863b-87818dae970a.png" alt="Next.js TypeScript Starter">
-</p>
+# One Piece TCG Portfolio Tracker
 
-<br />
-
-<div align="center"><strong>Non-opinionated TypeScript starter for Next.js</strong></div>
-<div align="center">Highly scalable foundation with the best DX. All the tools you need to build your Next project.</div>
-
-<br />
-
-<div align="center">
-  <img src="https://img.shields.io/static/v1?label=PRs&message=welcome&style=flat-square&color=5e17eb&labelColor=000000" alt="PRs welcome!" />
-
-  <img alt="License" src="https://img.shields.io/github/license/jpedroschmitz/typescript-nextjs-starter?style=flat-square&color=5e17eb&labelColor=000000">
-
-  <a href="https://x.com/intent/follow?screen_name=jpedroschmitz">
-    <img src="https://img.shields.io/twitter/follow/jpedroschmitz?style=flat-square&color=5e17eb&labelColor=000000" alt="Follow @jpedroschmitz" />
-  </a>
-</div>
-
-<div align="center">
-  <sub>Created by <a href="https://x.com/jpedroschmitz">João Pedro</a> with the help of many <a href="https://github.com/jpedroschmitz/typescript-nextjs-starter/graphs/contributors">wonderful contributors</a>.</sub>
-</div>
-
-<br />
+A web application for One Piece TCG collectors to track their card and sealed product portfolios, monitor market values, analyze set performance, and connect with other collectors.
 
 ## Features
 
-- ⚡️ Next.js 16 (App Router)
-- ⚛️ React 19
-- ⛑ TypeScript
-- 📏 ESLint 9 — To find and fix problems in your code
-- 💖 Prettier — Code Formatter for consistent style
-- 🐶 Husky — For running scripts before committing
-- 🚓 Commitlint — To make sure your commit messages follow the convention
-- 🖌 Renovate — To keep your dependencies up to date
-- 🚫 lint-staged — Run ESLint and Prettier against staged Git files
-- 👷 PR Workflow — Run Type Check & Linters on Pull Requests
-- ⚙️ EditorConfig - Consistent coding styles across editors and IDEs
-- 🗂 Path Mapping — Import components or images using the `@` prefix
-- 🔐 CSP — Content Security Policy for enhanced security (default minimal policy)
-- 🧳 T3 Env — Type-safe environment variables
-- 🪧 Redirects — Easily add redirects to your application
+### Portfolio Management
 
-## Quick Start
+- Track raw cards, graded slabs, and sealed products in one place
+- Record purchase price, date, and quantity
+- Condition tracking for raw cards (Mint, Near Mint, Lightly Played, etc.)
+- Full grading info for slabs (PSA, CGC, BGS, ARS) with grade and cert number
+- Wishlist and for-sale flags for items
 
-The best way to start with this template is using [Create Next App](https://nextjs.org/docs/api-reference/create-next-app).
+### Price Tracking
+
+- Manual price entry with history
+- Price trends per card/product
+- Current prices view with condition/grade variants
+
+### Analytics Dashboard
+
+- Portfolio total value and gain/loss calculations
+- Portfolio value over time charts
+- Category breakdown (cards vs sealed, raw vs graded)
+- Set completion percentage tracking
+
+### Public Browsing
+
+- Browse all sets with card counts
+- View card details with images and stats
+- Sealed products catalog
+- Search cards by name, set, rarity, color
+
+### Social Features
+
+- Public user profiles at `/u/[username]`
+- Wishlist and for-sale visibility
+- Privacy toggle for portfolios
+
+### Population Data
+
+- Grading population tracking from PSA, CGC, BGS, SGC
+- Population sync via edge functions
+
+## Tech Stack
+
+| Layer           | Technology                        |
+| --------------- | --------------------------------- |
+| Framework       | Next.js 15 (App Router)           |
+| UI              | React 19                          |
+| Language        | TypeScript                        |
+| Database        | Supabase (Postgres)               |
+| Auth            | Supabase Auth                     |
+| Security        | Supabase RLS (Row Level Security) |
+| Data Fetching   | TanStack Query (React Query)      |
+| Styling         | Tailwind CSS v4                   |
+| Components      | shadcn/ui                         |
+| Charts          | Recharts                          |
+| Forms           | react-hook-form + zod             |
+| Background Jobs | Supabase Edge Functions           |
+
+## Project Structure
 
 ```
-# pnpm
-pnpm create next-app -e https://github.com/jpedroschmitz/typescript-nextjs-starter
-# yarn
-yarn create next-app -e https://github.com/jpedroschmitz/typescript-nextjs-starter
-# npm
-npx create-next-app -e https://github.com/jpedroschmitz/typescript-nextjs-starter
+src/
+├── app/
+│   ├── (public)/           # Public routes (no auth required)
+│   │   ├── page.tsx        # Landing page
+│   │   ├── sets/           # Set browsing
+│   │   ├── cards/          # Card details
+│   │   ├── sealed/         # Sealed products catalog
+│   │   └── u/[username]/   # Public profiles
+│   ├── (auth)/             # Auth routes
+│   │   ├── login/          # Login page
+│   │   └── callback/       # OAuth callback
+│   └── (dashboard)/        # Protected routes
+│       └── dashboard/
+│           ├── page.tsx    # Portfolio overview
+│           ├── cards/      # Manage cards
+│           ├── sealed/     # Manage sealed products
+│           ├── analytics/  # Charts & insights
+│           └── settings/   # Profile settings
+├── components/
+│   ├── ui/                 # shadcn components
+│   ├── cards/              # Card-related components
+│   ├── portfolio/          # Portfolio management
+│   └── analytics/          # Charts and summaries
+├── lib/
+│   ├── api/                # API functions (Supabase wrappers)
+│   ├── supabase/           # Supabase clients (browser/server)
+│   └── optcg/              # OPTCG API integration
+├── hooks/
+│   ├── queries/            # React Query hooks
+│   └── mutations/          # React Query mutations
+└── types/
+    └── database.ts         # Generated Supabase types
+
+supabase/
+├── schemas/                # Declarative SQL schemas
+│   ├── 001-auth-users.sql  # Profiles table
+│   ├── 002-cards.sql       # Sets and cards
+│   ├── 003-sealed-products.sql
+│   ├── 004-grading.sql     # Grading enums
+│   ├── 005-portfolio.sql   # Portfolio items
+│   ├── 006-prices.sql      # Price history
+│   ├── 007-rls-policies.sql
+│   ├── 008-functions.sql   # DB functions
+│   └── 009-population.sql  # Grading population
+└── functions/              # Edge functions
+    └── sync-population/    # Population data sync
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js >= 20
+- pnpm 9+
+- Supabase CLI
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <repo-url>
+cd op-portfolio-tracker
+
+# Install dependencies
+pnpm install
+
+# Start local Supabase
+supabase start
+
+# Apply migrations and generate types
+supabase db reset
+pnpm db:gen-types
+```
+
+### Environment Variables
+
+Create a `.env.local` file:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ```
 
 ### Development
-
-To start the project locally, run:
 
 ```bash
 pnpm dev
 ```
 
-Open `http://localhost:3000` with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-## Testimonials
+## Database Schema
 
-> [**“This starter is by far the best TypeScript starter for Next.js. Feature packed but un-opinionated at the same time!”**](https://github.com/jpedroschmitz/typescript-nextjs-starter/issues/87#issue-789642190)<br>
-> — Arafat Zahan
+| Table                | Description                             |
+| -------------------- | --------------------------------------- |
+| `profiles`           | User profiles extending Supabase auth   |
+| `sets`               | Card sets (OP-01, OP-02, etc.)          |
+| `cards`              | Individual cards with stats and images  |
+| `sealed_products`    | Booster boxes, cases, starter decks     |
+| `portfolio_items`    | User portfolio entries (cards + sealed) |
+| `price_history`      | Historical price data                   |
+| `grading_population` | Population data from grading companies  |
 
-> [**“I can really recommend the Next.js Typescript Starter repo as a solid foundation for your future Next.js projects.”**](https://corfitz.medium.com/create-a-custom-create-next-project-command-2a6b35a1c8e6)<br>
-> — Corfitz
+## External APIs
 
-> [**“Brilliant work!”**](https://github.com/jpedroschmitz/typescript-nextjs-starter/issues/87#issuecomment-769314539)<br>
-> — Soham Dasgupta
+| API                                            | Purpose              | Status  |
+| ---------------------------------------------- | -------------------- | ------- |
+| [OPTCG API](https://optcgapi.com)              | Card data sync       | Planned |
+| [GemRate](https://gemrate.com)                 | Population data      | Planned |
+| [Limitless TCG](https://play.limitlesstcg.com) | Meta/tournament data | Planned |
 
-## Showcase
+## Scripts
 
-List of websites that started off with Next.js TypeScript Starter:
-
-- [FreeInvoice.dev](https://freeinvoice.dev)
-- [Notion Avatar Maker](https://github.com/Mayandev/notion-avatar)
-- [IKEA Low Price](https://github.com/Mayandev/ikea-low-price)
-- [hygraph.com](https://hygraph.com)
-- [rocketseat.com.br](https://www.rocketseat.com.br)
-- [vagaschapeco.com](https://vagaschapeco.com)
-- [unfork.vercel.app](https://unfork.vercel.app)
-- [Add yours](https://github.com/jpedroschmitz/typescript-nextjs-starter/edit/main/README.md)
-
-## Documentation
-
-### Requirements
-
-- Node.js >= 24
-- pnpm 10
-
-### Directory Structure
-
-- [`.github`](.github) — GitHub configuration including the CI workflow.<br>
-- [`.husky`](.husky) — Husky configuration and hooks.<br>
-- [`public`](./public) — Static assets such as robots.txt, images, and favicon.<br>
-- [`src`](./src) — Application source code, including pages, components, styles.
-
-### Scripts
-
-- `pnpm dev` — Starts the application in development mode at `http://localhost:3000`.
-- `pnpm build` — Creates an optimized production build of your application.
-- `pnpm start` — Starts the application in production mode.
-- `pnpm type-check` — Validate code using TypeScript compiler.
-- `pnpm lint` — Runs ESLint for all files in the `src` directory.
-- `pnpm lint:fix` — Runs ESLint fix for all files in the `src` directory.
-- `pnpm format` — Runs Prettier for all files in the `src` directory.
-- `pnpm format:check` — Check Prettier list of files that need to be formatted.
-- `pnpm format:ci` — Prettier check for CI.
-
-### Path Mapping
-
-TypeScript are pre-configured with custom path mappings. To import components or files, use the `@` prefix.
-
-```tsx
-import { Button } from '@/components/Button';
-// To import images or other files from the public folder
-import avatar from '@/public/avatar.png';
+```bash
+pnpm dev              # Start dev server
+pnpm build            # Production build
+pnpm lint             # ESLint + Prettier
+pnpm type-check       # TypeScript validation
+supabase start        # Start local Supabase
+supabase db reset     # Reset local database
 ```
-
-### Switch to Yarn/npm
-
-This starter uses pnpm by default, but this choice is yours. If you'd like to switch to Yarn/npm, delete the `pnpm-lock.yaml` file, install the dependencies with Yarn/npm, change the CI workflow, and Husky Git hooks to use Yarn/npm commands.
-
-> **Note:** If you use Yarn, make sure to follow these steps from the [Husky documentation](https://typicode.github.io/husky/troubleshoot.html#yarn-on-windows) so that Git hooks do not fail with Yarn on Windows.
-
-### Environment Variables
-
-We use [T3 Env](https://env.t3.gg/) to manage environment variables. Create a `.env.local` file in the root of the project and add your environment variables there.
-
-When adding additional environment variables, the schema in `./src/lib/env/client.ts` or `./src/lib/env/server.ts` should be updated accordingly.
-
-### Redirects
-
-To add redirects, update the `redirects` array in `./redirects.ts`. It's typed, so you'll get autocompletion for the properties.
-
-### CSP (Content Security Policy)
-
-The Content Security Policy (CSP) is a security layer that helps to detect and mitigate certain types of attacks, including Cross-Site Scripting (XSS) and data injection attacks. The CSP is implemented in the `next.config.ts` file.
-
-It contains a default and minimal policy that you can customize to fit your application needs. It's a foundation to build upon.
-
-### Husky
-
-Husky is a tool that helps us run scrips before Git events. We have 3 hooks:
-
-- `pre-commit` — (Disabled by default) Runs lint-staged to lint and format the files.
-- `commit-msg` — Runs commitlint to check if the commit message follows the conventional commit message format.
-- `post-merge` — Runs pnpm install to update the dependencies if there was a change in the `pnpm-lock.yaml` file.
-
-> Important note: Husky is disabled by default in the pre-commit hook. This is intention because most developers don't want to run lint-staged on every commit. If you want to enable it, run `echo 'HUSKY_ENABLED=true' > .husky/_/pre-commit.options`.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for more information.
+MIT
