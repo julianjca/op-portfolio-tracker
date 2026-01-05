@@ -128,15 +128,24 @@ export default async function SetDetailPage({ params, searchParams }: PageProps)
 
   const { data: pricesData } = await supabase
     .from('current_prices')
-    .select('card_id, price')
+    .select('card_id, price, is_graded, grading_company, grade')
     .eq('item_type', 'card')
-    .eq('is_graded', false)
     .in('card_id', cardIds);
 
-  const priceMap = new Map<number, number>();
-  (pricesData as { card_id: number; price: number }[] | null)?.forEach((p) => {
+  const rawPriceMap = new Map<number, number>();
+  const psa10PriceMap = new Map<number, number>();
+
+  (
+    pricesData as
+      | { card_id: number; price: number; is_graded: boolean; grading_company: string | null; grade: number | null }[]
+      | null
+  )?.forEach((p) => {
     if (p.card_id && p.price) {
-      priceMap.set(p.card_id, Number(p.price));
+      if (!p.is_graded) {
+        rawPriceMap.set(p.card_id, Number(p.price));
+      } else if (p.grading_company === 'PSA' && p.grade === 10) {
+        psa10PriceMap.set(p.card_id, Number(p.price));
+      }
     }
   });
 
@@ -191,7 +200,8 @@ export default async function SetDetailPage({ params, searchParams }: PageProps)
           {cards.map((card) => {
             const rarity = RARITY_CONFIG[card.rarity ?? ''] ?? DEFAULT_RARITY;
             const isSpecial = rarity.icon;
-            const price = priceMap.get(card.id);
+            const price = rawPriceMap.get(card.id);
+            const psa10Price = psa10PriceMap.get(card.id);
 
             return (
               <Link key={card.id} href={`/cards/${card.id}`} className="group block">
@@ -244,9 +254,16 @@ export default async function SetDetailPage({ params, searchParams }: PageProps)
                       <h3 className="line-clamp-1 text-sm font-semibold text-sea-900 transition-colors group-hover:text-luffy-600">
                         {card.name}
                       </h3>
-                      {price !== undefined && (
-                        <span className="shrink-0 text-sm font-bold text-emerald-600">${price.toFixed(2)}</span>
-                      )}
+                      <div className="flex shrink-0 flex-col items-end gap-0.5">
+                        {price !== undefined && (
+                          <span className="text-sm font-bold text-emerald-600">${price.toFixed(2)}</span>
+                        )}
+                        {psa10Price !== undefined && (
+                          <span className="text-[10px] font-medium text-violet-600">
+                            PSA 10: ${psa10Price.toFixed(2)}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className="mt-1.5 flex items-center gap-1.5">
                       {card.color && (

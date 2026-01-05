@@ -1,4 +1,4 @@
-import { ArrowLeft, ImageOff, Plus } from 'lucide-react';
+import { ArrowLeft, ImageOff, Plus, TrendingUp } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -41,6 +41,17 @@ export default async function CardDetailPage({ params }: { params: Promise<{ id:
 
   const card = data as unknown as CardWithSet;
   const set = card.sets;
+
+  const { data: pricesData } = await supabase
+    .from('current_prices')
+    .select('price, is_graded, grading_company, grade')
+    .eq('item_type', 'card')
+    .eq('card_id', cardId);
+
+  const rawPrice = pricesData?.find((p) => !p.is_graded);
+  const gradedPrices = pricesData?.filter((p) => p.is_graded && p.grade === 10) ?? [];
+
+  const formatPrice = (price: number) => `$${price.toFixed(2)}`;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
@@ -129,6 +140,46 @@ export default async function CardDetailPage({ params }: { params: Promise<{ id:
                 <div>
                   <p className="text-sm text-sea-500">Attribute</p>
                   <p className="font-medium text-sea-800">{card.attribute}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="border-sea-200 bg-white">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-lg text-sea-800">
+                <TrendingUp className="h-5 w-5" />
+                Market Prices
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {!rawPrice && gradedPrices.length === 0 ? (
+                <p className="text-sm text-sea-500">No price data available</p>
+              ) : (
+                <div className="space-y-4">
+                  {rawPrice?.price != null && (
+                    <div>
+                      <p className="text-sm text-sea-500">Raw Card</p>
+                      <p className="text-2xl font-bold text-emerald-600">{formatPrice(rawPrice.price)}</p>
+                    </div>
+                  )}
+                  {gradedPrices.length > 0 && (
+                    <div>
+                      <p className="mb-2 text-sm text-sea-500">Graded (10)</p>
+                      <div className="grid gap-3 sm:grid-cols-3">
+                        {gradedPrices.map((graded, index) => (
+                          <div key={index} className="rounded-lg bg-sea-50 p-3">
+                            <p className="text-xs font-medium text-sea-600">
+                              {graded.grading_company?.toUpperCase() ?? 'Graded'} {graded.grade}
+                            </p>
+                            <p className="font-semibold text-sea-800">
+                              {graded.price != null ? formatPrice(graded.price) : '-'}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </CardContent>

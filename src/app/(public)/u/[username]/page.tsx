@@ -70,10 +70,12 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const totalQuantity =
     cardItems.reduce((sum, item) => sum + item.quantity, 0) + sealedItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  const memberSince = new Date(profile.created_at).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-  });
+  const memberSince = profile.created_at
+    ? new Date(profile.created_at).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+      })
+    : 'Unknown';
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">

@@ -36,11 +36,7 @@ export async function updateProfile(
 ): Promise<Profile> {
   const supabase = createClient();
 
-  const { data, error } = await (supabase.from('profiles') as ReturnType<typeof supabase.from>)
-    .update(updates)
-    .eq('id', userId)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('profiles').update(updates).eq('id', userId).select().single();
 
   if (error) throw error;
   return data as unknown as Profile;

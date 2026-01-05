@@ -9,6 +9,7 @@ create table public.price_history (
   source public.price_source not null default 'manual',
   condition public.card_condition,
   is_graded boolean default false,
+  grading_company public.grading_company,
   grade numeric(3,1),
   recorded_at timestamptz default now(),
   recorded_by uuid references public.profiles(id),
@@ -25,7 +26,7 @@ create index idx_price_history_sealed on public.price_history(sealed_product_id,
 create index idx_price_history_date on public.price_history(recorded_at desc);
 
 create view public.current_prices as
-select distinct on (item_type, card_id, sealed_product_id, condition, is_graded, grade)
+select distinct on (item_type, card_id, sealed_product_id, condition, is_graded, grading_company, grade)
   id,
   item_type,
   card_id,
@@ -34,9 +35,10 @@ select distinct on (item_type, card_id, sealed_product_id, condition, is_graded,
   source,
   condition,
   is_graded,
+  grading_company,
   grade,
   recorded_at
 from public.price_history
-order by item_type, card_id, sealed_product_id, condition, is_graded, grade, recorded_at desc;
+order by item_type, card_id, sealed_product_id, condition, is_graded, grading_company, grade, recorded_at desc;
 
 alter table public.price_history enable row level security;

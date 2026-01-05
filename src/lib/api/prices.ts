@@ -81,10 +81,7 @@ export async function addPrice(userId: string, price: NewPrice): Promise<PriceHi
     recorded_by: userId,
   };
 
-  const { data, error } = await (supabase.from('price_history') as ReturnType<typeof supabase.from>)
-    .insert(insertData)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('price_history').insert(insertData).select().single();
 
   if (error) throw error;
   return data as unknown as PriceHistory;

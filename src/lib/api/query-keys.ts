@@ -42,5 +42,5 @@ export interface CardFilters {
 
 export interface SealedProductFilters {
   setId?: number;
-  productType?: string;
+  productType?: 'booster_box' | 'booster_pack' | 'case' | 'starter_deck' | 'promo' | 'collection_box' | 'other';
 }

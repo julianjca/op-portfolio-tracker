@@ -92,10 +92,7 @@ export async function addPortfolioItem(userId: string, item: NewPortfolioItem): 
     notes: item.notes ?? null,
   };
 
-  const { data, error } = await (supabase.from('portfolio_items') as ReturnType<typeof supabase.from>)
-    .insert(insertData)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('portfolio_items').insert(insertData).select().single();
 
   if (error) throw error;
   return data as unknown as PortfolioItem;
@@ -104,11 +101,7 @@ export async function addPortfolioItem(userId: string, item: NewPortfolioItem): 
 export async function updatePortfolioItem(id: number, updates: Partial<NewPortfolioItem>): Promise<PortfolioItem> {
   const supabase = createClient();
 
-  const { data, error } = await (supabase.from('portfolio_items') as ReturnType<typeof supabase.from>)
-    .update(updates)
-    .eq('id', id)
-    .select()
-    .single();
+  const { data, error } = await supabase.from('portfolio_items').update(updates).eq('id', id).select().single();
 
   if (error) throw error;
   return data as unknown as PortfolioItem;

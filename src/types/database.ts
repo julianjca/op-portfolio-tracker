@@ -265,6 +265,7 @@ export interface Database {
           card_id: number | null;
           condition: Database['public']['Enums']['card_condition'] | null;
           grade: number | null;
+          grading_company: Database['public']['Enums']['grading_company'] | null;
           id: number;
           is_graded: boolean | null;
           item_type: Database['public']['Enums']['portfolio_item_type'];
@@ -278,6 +279,7 @@ export interface Database {
           card_id?: number | null;
           condition?: Database['public']['Enums']['card_condition'] | null;
           grade?: number | null;
+          grading_company?: Database['public']['Enums']['grading_company'] | null;
           id?: never;
           is_graded?: boolean | null;
           item_type: Database['public']['Enums']['portfolio_item_type'];
@@ -291,6 +293,7 @@ export interface Database {
           card_id?: number | null;
           condition?: Database['public']['Enums']['card_condition'] | null;
           grade?: number | null;
+          grading_company?: Database['public']['Enums']['grading_company'] | null;
           id?: never;
           is_graded?: boolean | null;
           item_type?: Database['public']['Enums']['portfolio_item_type'];
@@ -454,6 +457,7 @@ export interface Database {
           card_id: number | null;
           condition: Database['public']['Enums']['card_condition'] | null;
           grade: number | null;
+          grading_company: Database['public']['Enums']['grading_company'] | null;
           id: number | null;
           is_graded: boolean | null;
           item_type: Database['public']['Enums']['portfolio_item_type'] | null;
