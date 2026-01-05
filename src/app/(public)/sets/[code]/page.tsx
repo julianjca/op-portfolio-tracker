@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { CardFilters } from '@/components/cards/card-filters';
+import { SetValueCard } from '@/components/sets/set-value-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@/lib/supabase/server';
@@ -184,6 +185,17 @@ export default async function SetDetailPage({ params, searchParams }: PageProps)
 
         <div className="mt-4">
           <CardFilters setCode={code} sort={sort} rarity={rarity} color={color} type={type} />
+        </div>
+
+        <div className="mt-6">
+          <SetValueCard
+            rawValue={set.raw_value}
+            psa10Value={set.psa10_value}
+            sealedValue={set.sealed_value}
+            cardsPriced={set.cards_priced}
+            totalCards={allCards.length}
+            valueUpdatedAt={set.value_updated_at}
+          />
         </div>
       </div>
 

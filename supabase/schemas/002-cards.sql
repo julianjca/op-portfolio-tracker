@@ -5,7 +5,13 @@ create table public.sets (
   release_date date,
   total_cards integer,
   image_url text,
-  created_at timestamptz default now()
+  created_at timestamptz default now(),
+  -- Cached set value columns (updated daily via cron)
+  raw_value numeric default 0,
+  psa10_value numeric default 0,
+  sealed_value numeric default 0,
+  cards_priced integer default 0,
+  value_updated_at timestamptz
 );
 
 comment on table public.sets is 'One Piece TCG card sets (OP-01, OP-02, etc.) with metadata like release date and card counts.';

@@ -429,6 +429,11 @@ export interface Database {
           name: string;
           release_date: string | null;
           total_cards: number | null;
+          raw_value: number | null;
+          psa10_value: number | null;
+          sealed_value: number | null;
+          cards_priced: number | null;
+          value_updated_at: string | null;
         };
         Insert: {
           code: string;
@@ -438,6 +443,11 @@ export interface Database {
           name: string;
           release_date?: string | null;
           total_cards?: number | null;
+          raw_value?: number | null;
+          psa10_value?: number | null;
+          sealed_value?: number | null;
+          cards_priced?: number | null;
+          value_updated_at?: string | null;
         };
         Update: {
           code?: string;
@@ -447,6 +457,11 @@ export interface Database {
           name?: string;
           release_date?: string | null;
           total_cards?: number | null;
+          raw_value?: number | null;
+          psa10_value?: number | null;
+          sealed_value?: number | null;
+          cards_priced?: number | null;
+          value_updated_at?: string | null;
         };
         Relationships: [];
       };
@@ -550,6 +565,21 @@ export interface Database {
           isOneToOne: false;
           isSetofReturn: true;
         };
+      };
+      calculate_set_value: {
+        Args: { p_set_id: number };
+        Returns: undefined;
+      };
+      calculate_all_set_values: {
+        Args: Record<string, never>;
+        Returns: {
+          set_id: number;
+          set_code: string;
+          raw_value: number;
+          psa10_value: number;
+          sealed_value: number;
+          cards_priced: number;
+        }[];
       };
     };
     Enums: {

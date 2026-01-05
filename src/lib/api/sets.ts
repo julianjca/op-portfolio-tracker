@@ -30,6 +30,11 @@ export async function getSets(): Promise<SetWithCardCount[]> {
     total_cards: set.total_cards,
     image_url: set.image_url,
     created_at: set.created_at,
+    raw_value: set.raw_value,
+    psa10_value: set.psa10_value,
+    sealed_value: set.sealed_value,
+    cards_priced: set.cards_priced,
+    value_updated_at: set.value_updated_at,
     card_count: set.cards?.[0]?.count ?? 0,
   }));
 }
